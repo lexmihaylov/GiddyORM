@@ -9,6 +9,7 @@ include __DIR__ . '/Validator.php';
 include __DIR__ . '/ModelList.php';
 include __DIR__ . '/Model.php';
 
+// test config
 DB::$config = array(
     'host' => 'localhost',
     'username' => 'root',
