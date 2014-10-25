@@ -10,7 +10,8 @@
  *
  * @author alexander
  */
-require_once __DIR__ . '/Adapter.php';
+
+namespace Lex\GiddyORM\adapters;
 
 class MySQLAdapterException extends Exception {}
 

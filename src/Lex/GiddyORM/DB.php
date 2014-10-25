@@ -5,6 +5,8 @@
  *
  * @author alexander
  */
+namespace Lex\GiddyORM;
+
 class DB {
 
     private static $__instances = array();

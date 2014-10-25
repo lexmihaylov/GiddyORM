@@ -10,6 +10,8 @@
  *
  * @author alexander
  */
+namespace Lex\GiddyORM;
+
 class Model {
 
     public static

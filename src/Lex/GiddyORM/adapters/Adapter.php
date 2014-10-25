@@ -10,6 +10,8 @@
  *
  * @author alexander
  */
+namespace Lex\GiddyORM\adapters;
+
 abstract class Adapter {
     protected static $_connection = null;
     private static $__instance = null;

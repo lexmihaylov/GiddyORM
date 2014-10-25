@@ -10,6 +10,8 @@
  *
  * @author alexander
  */
+namespace Lex\GiddyORM;
+
 abstract class Relationship {
 
     protected static $valid_options = array(

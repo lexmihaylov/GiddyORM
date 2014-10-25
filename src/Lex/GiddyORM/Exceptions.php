@@ -10,6 +10,7 @@
  *
  * @author alexander
  */
+namespace Lex\GiddyORM;
 
 class SQLException extends Exception {}
 

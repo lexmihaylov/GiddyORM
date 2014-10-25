@@ -1,4 +1,5 @@
 <?php
+namespace Lex\GiddyORM;
 
 function is_blank($str) {
 	return strlen($str) == 0;

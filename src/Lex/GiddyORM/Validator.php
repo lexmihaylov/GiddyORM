@@ -11,6 +11,8 @@
  * @author alexander
  */
 
+namespace Lex\GiddyORM;
+
 class Validator {
     private $__class_name = null;
     private $__object = null;
