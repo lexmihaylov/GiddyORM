@@ -21,7 +21,7 @@ class MySQLAdapter extends Adapter {
     
     public function connect($host, $username, $password, $database, $driver) {
         if (is_null(self::$_connection)) {
-            self::$_connection = mysql_connect($host, $username, $password);
+            self::$_connection = @mysql_connect($host, $username, $password);
             if (!self::$_connection) {
                 throw new MySQLAdapterException(
                     "Cannot establish connection to MySQL server: " . mysql_error()
@@ -46,7 +46,7 @@ class MySQLAdapter extends Adapter {
         foreach ($params as $column => $val) {
             $query = str_replace(":{$column}", mysql_real_escape_string($val), $query);
         }
-        $result = mysql_query($query);
+        $result = @mysql_query($query);
 
         return $result;
     }

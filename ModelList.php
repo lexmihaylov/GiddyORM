@@ -31,5 +31,3 @@ class ModelList extends ArrayObject {
 		return false;
     }
 }
-
-?>

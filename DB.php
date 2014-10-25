@@ -59,7 +59,7 @@ class DB {
         if (!isset(self::$__instances[$modelName])) {
             self::$__instances[$modelName] = new DB($modelName);
         }
-
+        
         return self::$__instances[$modelName];
     }
 

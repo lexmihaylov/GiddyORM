@@ -121,7 +121,7 @@ class Validator {
                     $key_value => current($validation)
                 );
             }
-        }elseif($params_count == 4) {
+        } elseif($params_count == 4) {
             next($validation);
             
             $option_name = key($validation);
@@ -157,6 +157,10 @@ class Validator {
         }
     }
     
+    public function has_errors() {
+        return !$this->is_valid();
+    }
+    
     public function add_error($field, $message) {
         if(isset($this->__errors[$field])) {
             if(is_array($this->__errors[$field])) {
@@ -178,6 +182,10 @@ class Validator {
         }
         
         return $this->__errors;
+    }
+    
+    public function get_all() {
+        return $this->get();
     }
     
     public function validate($action) {
