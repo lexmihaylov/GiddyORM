@@ -85,7 +85,9 @@ class DB {
         if (is_null($this->_table_columns)) {
             $class_name = $this->_class;
             $table = $class_name::get_table();
-            $result = mysql_query(
+            $adabter_class = self::$_db_adapter;
+            
+            $result = $adabter_class::instance()->query(
                     "SELECT `COLUMN_NAME` FROM `information_schema`.`COLUMNS` WHERE `TABLE_NAME` = '{$table}'"
             );
 
@@ -94,8 +96,8 @@ class DB {
             }
 
             $this->_table_columns = array();
-            while ($row = mysql_fetch_row($result)) {
-                $this->_table_columns[] = $row[0];
+            while ($object = $adabter_class::instance()->fetch_object($result)) {
+                $this->_table_columns[] = $object->COLUMN_NAME;
             }
         }
 
@@ -220,7 +222,9 @@ class DB {
     }
 
     public function fetch_object() {
-        return mysql_fetch_object($this->_result, $this->_class);
+        $adapter_class = self::$_db_adapter;
+        
+        return $adapter_class::instance()->fetch_object($this->_result, $this->_class);
     }
 
     private function build_relationship() {
@@ -267,12 +271,13 @@ class DB {
 
     public function create(array $params) {
         $this->_operation = 'insert';
-
+        $adapter_class = self::$_db_adapter;
+        
         $columns = '';
         $values = '';
 
         foreach ($params as $column => $value) {
-            $value = mysql_real_escape_string($value);
+            $value = $adapter_class::instance()->escape($value);
 
             $columns .= "`{$column}`, ";
             $values .= "'{$value}', ";
@@ -285,11 +290,12 @@ class DB {
 
         $this->exec();
 
-        return mysql_insert_id();
+        return $adapter_class::instance()->last_insert_id();
     }
 
     public function update(array $fields) {
         $this->_operation = 'update';
+        $adapter_class = self::$_db_adapter;
 
         $updateQuery = '';
         $whereStatement = '';
@@ -297,7 +303,7 @@ class DB {
         $limitStatement = '';
 
         foreach ($fields as $column => $val) {
-            $val = mysql_real_escape_string($val);
+            $val = $adapter_class::instance()->escape($val);
             $updateQuery .= "`{$column}`='{$val}', ";
         }
 
@@ -404,10 +410,6 @@ class DB {
 
         $this->_result = self::sql_query($this->_query, $params);
 
-        if ($this->_operation == 'select' && !$this->_result) {
-            throw new SQLException(mysql_error());
-        }
-
         return $this;
     }
 
@@ -425,10 +427,10 @@ class DB {
     }
 
     public function count(array $params = array()) {
-        $this->select('count(*)');
         $this->exec($params);
-        $result = mysql_fetch_row($this->_result);
-        return $result[0];
+        $adapter_class = self::$_db_adapter;
+        
+        return $adapter_class::instance()->count($this->_result);
     }
 
     public function custom_query($query, array $params = array()) {
@@ -442,10 +444,6 @@ class DB {
         return $list;
     }
 
-    public function affected_rows() {
-        return mysql_affected_rows();
-    }
-
     public function last_query() {
         return $this->_query;
     }
@@ -455,5 +453,3 @@ class DB {
     }
 
 }
-
-?>

@@ -47,8 +47,29 @@ class MySQLAdapter extends Adapter {
         foreach ($params as $column => $val) {
             $query = str_replace(":{$column}", mysql_real_escape_string($val), $query);
         }
-        $result = @mysql_query($query);
+        $result = mysql_query($query);
 
         return $result;
+    }
+    
+    public function fetch_object($result, $class_name = 'stdClass') {
+        
+        return mysql_fetch_object($result, $class_name);
+    }
+    
+    public function count($result) {
+        return mysql_num_rows($result);
+    }
+    
+    public function escape($string) {
+        return mysql_real_escape_string($string);
+    }
+    
+    public function last_insert_id() {
+        return mysql_insert_id();
+    }
+    
+    public function affected_rows() {
+        return mysql_affected_rows();
     }
 }

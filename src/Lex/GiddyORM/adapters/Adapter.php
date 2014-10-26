@@ -33,4 +33,9 @@ abstract class Adapter {
 
     abstract function connect($host, $username, $password, $database, $driver);
     abstract function query($query, array $params = array());
+    abstract function fetch_object($result, $class_name = 'stdClass');
+    abstract function count($result);
+    abstract function escape($string);
+    abstract function last_insert_id();
+    abstract function affected_rows();
 }
