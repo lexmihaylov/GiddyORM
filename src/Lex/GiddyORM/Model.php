@@ -82,6 +82,13 @@ class Model {
      * @throws ModelFinderException
      */
     public static function __callStatic($name, $arguments) {
+        if($name == 'find') {
+            return static::DB()->where("`" . static::get_table() . "`.`".static::$primary_key."` = ':".static::$primary_key."'")
+                            ->fetch(array(
+                            static::$primary_key => $arguments[0]
+            ))->first();
+        }
+        
         if (preg_match('/^find_by_/', $name)) {
             if (count($arguments) != 1) {
                 throw new ModelFinderException("'$name' accepts 1 argument, " . count($arguments) . ' given.');
