@@ -12,7 +12,7 @@
  */
 namespace Lex\GiddyORM;
 
-class ModelList extends ArrayObject {
+class ModelList extends \ArrayObject {
     public function __construct($array = array()) {
         parent::__construct($array);
     }

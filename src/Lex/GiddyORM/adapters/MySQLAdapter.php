@@ -13,7 +13,7 @@
 
 namespace Lex\GiddyORM\adapters;
 
-class MySQLAdapterException extends Exception {}
+class MySQLAdapterException extends \Exception {}
 
 class MySQLAdapter extends Adapter {
     public function __construct() {

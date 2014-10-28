@@ -13,7 +13,9 @@
  */
 namespace Lex\GiddyORM\adapters;
 
-class PDOAdapterException {}
+use PDO;
+
+class PDOAdapterException extends \Exception {}
 
 class PDOAdapter extends Adapter {
     public function connect($host, $username, $password, $database, $driver) {
@@ -26,7 +28,7 @@ class PDOAdapter extends Adapter {
         $statement = self::$_connection->prepare($query);
         
         if(!$statement->execute($params)) {
-            throw new PDOException($statement->errorInfo());
+            throw new PDOAdapterException(array_pop($statement->errorInfo()));
         }
         
         return $statement;

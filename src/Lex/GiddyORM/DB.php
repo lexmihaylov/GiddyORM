@@ -105,14 +105,10 @@ class DB {
     }
 
     public function connect() {
-        $adapter_class = self::$_db_adapter = self::$config['adapter'] . "Adapter";
+        $adapter_class = self::$_db_adapter = 'Lex\\GiddyORM\\adapters\\'. self::$config['adapter'] . "Adapter";
         
         if (!class_exists($adapter_class)) {
-            if (file_exists(__DIR__ . "/adapters/$adapter_class.php")) {
-                require_once __DIR__ . "/adapters/$adapter_class.php";
-            } else {
-                throw new UnknownAdapterException("Unknown adapter '$adapter_class'");
-            }
+            throw new UnknownAdapterException("Unknown adapter '$adapter_class'");
         }
 
         $adapter_class::instance()->connect(

@@ -83,10 +83,10 @@ class Model {
      */
     public static function __callStatic($name, $arguments) {
         if($name == 'find') {
-            return static::DB()->where("`" . static::get_table() . "`.`".static::$primary_key."` = ':".static::$primary_key."'")
+            return static::DB()->where("`" . static::get_table() . "`.`".static::$primary_key."` = :".static::$primary_key."")
                             ->fetch(array(
-                            static::$primary_key => $arguments[0]
-            ))->first();
+                                ':'.static::$primary_key => $arguments[0]
+                            ))->first();
         }
         
         if (preg_match('/^find_by_/', $name)) {
@@ -97,9 +97,9 @@ class Model {
             $column_name = str_replace("find_by_", '', $name);
             $value = $arguments[0];
 
-            $results = static::DB()->where("`" . static::get_table() . "`.`$column_name` = ':$column_name'")
+            $results = static::DB()->where("`" . static::get_table() . "`.`$column_name` = :$column_name")
                             ->fetch(array(
-                                $column_name => $value
+                                ':'.$column_name => $value
             ));
             
             if($column_name == static::$primary_key) {
@@ -262,7 +262,7 @@ class Model {
         $this->executeFilters('before_delete');
 
         static::DB()->delete()
-                ->where('`' . static::$primary_key . '` = \':id\'')
+                ->where('`' . static::$primary_key . '` = :id')
                 ->exec(array('id' => $this->{static::$primary_key}));
 
         $this->executeFilters('after_delete');
@@ -286,7 +286,7 @@ class Model {
             $fields = $this->get_column_attributes();
             unset($fields[static::$primary_key]);
             static::DB()->update($fields)
-                    ->where('`' . static::$primary_key . '` = \':id\'')
+                    ->where('`' . static::$primary_key . '` = :id')
                     ->exec(array('id' => $this->{static::$primary_key}));
 
             $this->executeFilters('after_update');
@@ -317,7 +317,7 @@ class Model {
         $refreshed_object = false;
         if (property_exists($this, $pk)) {
             $refreshed_object = static::DB()
-                    ->where("`$pk`=':$pk'")
+                    ->where("`$pk`=:$pk")
                     ->includes($includes)
                     ->fetch(array($pk => $this->{$pk}))
                     ->first();

@@ -342,5 +342,3 @@ class BelongsToRelation extends Relationship {
     }
 
 }
-
-?>
