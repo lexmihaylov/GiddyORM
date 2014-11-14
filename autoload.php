@@ -1,5 +1,8 @@
 <?php
-$srcDir = __DIR__ . '/src/';
-spl_autoload_register(function($name) use ($srcDir) {
-    require $srcDir . str_replace('\\', '/', $name) . '.php';
+$classMap = require __DIR__ . '/classmap.php';
+
+spl_autoload_register(function($name) use ($classMap) {
+    if(isset($classMap[$name])) {
+        require $classMap[$name];
+    }
 });

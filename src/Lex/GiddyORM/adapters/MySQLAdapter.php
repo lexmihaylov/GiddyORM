@@ -22,54 +22,46 @@ class MySQLAdapter extends Adapter {
     
     public function connect($host, $username, $password, $database, $driver) {
         if (is_null(self::$_connection)) {
-            self::$_connection = @mysql_connect($host, $username, $password);
-            if (!self::$_connection) {
+            self::$_connection = new mysqli($host, $username, $password, $database);
+            if (mysqli_connect_errno) {
                 throw new MySQLAdapterException(
-                    "Cannot establish connection to MySQL server: " . mysql_error()
-                );
-            }
-
-            if (!mysql_select_db($database, self::$_connection)) {
-                throw new MySQLAdapterException(
-                    mysql_error()
-                );
-            }
-
-            if (!mysql_query('SET NAMES utf8', self::$_connection)) {
-                throw new MySQLAdapterException(
-                    mysql_error()
+                    "Cannot establish connection to MySQL server: " . 
+                        mysqli_connect_error()
                 );
             }
         }
     }
 
     public function query($query, array $params = array()) {
-        foreach ($params as $column => $val) {
-            $query = str_replace(":{$column}", mysql_real_escape_string($val), $query);
+        $statement = self::$_connection->prepare($query);
+        
+        call_user_func_array(array($statement, 'bind_param'), $params);
+        
+        if(!$statement->execute()) {
+            throw new MySQLAdapterException($statement->error);
         }
-        $result = mysql_query($query);
-
-        return $result;
+        
+        return $statement;
     }
     
     public function fetch_object($result, $class_name = 'stdClass') {
-        
-        return mysql_fetch_object($result, $class_name);
+        $result->fetch_object($class_name);
     }
     
     public function count($result) {
-        return mysql_num_rows($result);
+        $result->store_result();
+        return $result->num_rows;
     }
     
     public function escape($string) {
-        return mysql_real_escape_string($string);
+        return self::$_connection->real_escape_string($string);
     }
     
     public function last_insert_id() {
-        return mysql_insert_id();
+        return self::$_connection->insert_id;
     }
     
     public function affected_rows() {
-        return mysql_affected_rows();
+        return self::$_connection->affected_rows;
     }
 }
